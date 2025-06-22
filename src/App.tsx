@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
+import FtServices from './services/token/ft';
+import Web3 from './web3';
 
 function App() {
   const [zktransfer, setZktransfer] = useState({
@@ -19,6 +21,20 @@ function App() {
     amount: '',
   });
 
+  const [enaRegister, setEnaRegister] = useState({
+    eoa: '',
+    eoaSk: '',
+    enaPk: '',
+  });
+
+  const tokenInfo = {
+    name: 'Ethereum',
+    symbol: 'ETH',
+    address: '0x0000000000000000000000000000000000000000',
+    imageUri: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
+    decimal: '0'
+  };
+
   const onChangeZkTransfer = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -35,7 +51,35 @@ function App() {
     });
   };
 
-  
+  const onChangeEnaRegister = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setEnaRegister(prev => {
+      return {...prev, [name] : value}
+    });
+  };
+
+  const registerENA = async() => {
+    const azerothWeb3 = Web3.Azeroth.azerothContract;
+    await azerothWeb3.registerUser(
+                enaRegister.enaPk,
+                enaRegister.eoa,
+                enaRegister.eoaSk);
+  }
+
+  const deposit = () => {
+    FtServices.exchangeToken(
+        tokenInfo.address,
+        'Charge',
+        zkDeposit.amount,
+        new Web3.Azeroth.structure.Key.UserKey(
+            zkDeposit.enaPk,
+            zkDeposit.enaSk,
+        ),
+        zkDeposit.eoa,
+        zkDeposit.eoaSk,
+    )
+  }
 
   return (
     <div className="App">
@@ -69,6 +113,18 @@ function App() {
         <input name='enaSk' value={zkDeposit.enaSk} onChange={onChangeZkDeposit}/>
         <h5>amount</h5>
         <input name='amount' value={zkDeposit.amount} onChange={onChangeZkDeposit}/>
+        <br/>
+        <button>전송</button>
+      </div>
+
+      <div>
+        <h2>ena 등록</h2>
+        <h5>eoa</h5>
+        <input name='eoa' value={enaRegister.eoa} onChange={onChangeEnaRegister}/>
+        <h5>eoa sk</h5>
+        <input name='eoaSk' value={enaRegister.eoaSk} onChange={onChangeEnaRegister}/>
+        <h5>ena pk</h5>
+        <input name='enaPk' value={enaRegister.enaPk} onChange={onChangeEnaRegister}/>
         <br/>
         <button>전송</button>
       </div>
