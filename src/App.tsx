@@ -3,11 +3,17 @@ import './App.css';
 import FtServices from './services/token/ft';
 import Web3 from './web3';
 
+type userPK =  {
+    ena: null,
+    pkOwn: null,
+    pkEnc: null,
+}
+
 function App() {
   const [zktransfer, setZktransfer] = useState({
     senderEoa: '',
     senderEoaSk: '',
-    senderEnaPk: '',
+    senderEnaPk: undefined,
     senderEnaSk: '',
     reveiverEoa: '',
     amount: '',
@@ -16,7 +22,7 @@ function App() {
   const [zkDeposit, setZkDeposit] = useState({
     eoa: '',
     eoaSk: '',
-    enaPk: '',
+    enaPk: undefined,
     enaSk: '',
     amount: '',
   });
@@ -24,7 +30,7 @@ function App() {
   const [enaRegister, setEnaRegister] = useState({
     eoa: '',
     eoaSk: '',
-    enaPk: '',
+    enaPk: undefined,
   });
 
   const tokenInfo = {
